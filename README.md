@@ -2,6 +2,7 @@
 Android library for offline speech recognition base on Pocketsphinx engine. Add speech recognition feature into your Android app with easier implementations. RapidSphinx gives simple configuration and implementation for your app without dealing with Pocketsphinx assets and configuration. Just add it to your gradle!
 
 ## Features
+- [x] High accuracy
 - [x] Build dictionary on the fly
 - [x] Build language model (Arpa File) on the fly
 - [x] Build JSGF Grammar on the fly
@@ -138,8 +139,8 @@ You can update the vocabulary with language model or JSGF Grammar on the fly.
 Make sure to remove the punctuation before update vocabulary/grammar.
 ```java
 // Update vocabulary with language model from single string
-rapidSphinx.updateVocabulary("YOUR TEXT HERE!",
-                                new String[]{"KEYWORD SPOTTING!", ...}, new RapidCompletionListener() {
+rapidSphinx.updateVocabulary("YOUR VOCABULARIES!",
+                                new String[]{"KEYWORD SPOTTING FOR OOV!", ...}, new RapidCompletionListener() {
     @Override
     public void rapidCompletedProcess() {
         System.out.println("Vocabulary updated!");
@@ -148,7 +149,7 @@ rapidSphinx.updateVocabulary("YOUR TEXT HERE!",
 
 // Update vocabulary with language model from array string
 rapidSphinx.updateVocabulary(new String[]{"TEXT1!", "TEXT2!", ...},
-                                new String[]{"KEYWORD SPOTTING!", ...}, new RapidCompletionListener() {
+                                new String[]{"KEYWORD SPOTTING FOR OOV!", ...}, new RapidCompletionListener() {
     @Override
     public void rapidCompletedProcess() {
         System.out.println("Vocabulary updated!");
@@ -156,11 +157,11 @@ rapidSphinx.updateVocabulary(new String[]{"TEXT1!", "TEXT2!", ...},
 });
 
 // Update vocabulary with JSGF Grammar from string
-rapidSphinx.updateGrammar("YOUR TEXT HERE!",
-                                new String[]{"KEYWORD SPOTTING!", ...}, new RapidCompletionListener() {
+rapidSphinx.updateGrammar("YOUR VOCABULARIES!",
+                                new String[]{"KEYWORD SPOTTING FOR OOV!", ...}, new RapidCompletionListener() {
     @Override
     public void rapidCompletedProcess() {
-        System.out.println("Vocabulary updated!");
+        System.out.println("Grammar updated!");
     }
 });
 ```
@@ -172,7 +173,7 @@ rapidSphinx.startRapidSphinx(10000);
 ```
 
 ## Play Audio Record
-Make sure play audio record after speech recognizer is done.
+Make sure play audio the record after speech recognizer is done.
 ```java
 rapidSphinx.getRapidRecorder().play(new RapidCompletionListener() {
     @Override
@@ -182,11 +183,11 @@ rapidSphinx.getRapidRecorder().play(new RapidCompletionListener() {
 });
 ```
 
-## Note : Please look at RapidSphinxDemo for detail usage.
+### Note : Please take a look at RapidSphinxDemo for detail usage.
 
 ## MIT License
 ```
-Copyright (c) 2017 Saiful Irham Wicaksana
+Copyright (c) 2018 Saiful Irham Wicaksana
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
