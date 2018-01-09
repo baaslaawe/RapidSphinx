@@ -11,5 +11,6 @@ public interface RapidSphinxListener {
     void rapidSphinxFinalResult(String result, List<String> hypArr, List<Double> scores);
     void rapidSphinxPartialResult(String partialResult);
     void rapidSphinxUnsupportedWords(List<String> words);
+    void rapidSphinxBuffer(short[] shortBuffer, byte[] byteBuffer, boolean inSpeech);
     void rapidSphinxDidSpeechDetected();
 }

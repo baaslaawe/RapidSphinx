@@ -150,8 +150,8 @@ public class RapidSphinx implements RecognitionListener {
                     if (rawLogAvailable) {
                         config.setString("-rawlogdir", assetDir.getPath());
                     }
-                    rapidRecognizer = new RapidRecognizer(assetDir, config);
-                    rapidRecognizerTemp = new RapidRecognizer(assetDir, config);
+                    rapidRecognizer = new RapidRecognizer(assetDir, config, rapidSphinxListener);
+                    rapidRecognizerTemp = new RapidRecognizer(assetDir, config, rapidSphinxListener);
                     rapidRecognizer.addRapidListener(RapidSphinx.this);
                 } catch (IOException e) {
                     System.out.println(e.getMessage());
@@ -214,8 +214,8 @@ public class RapidSphinx implements RecognitionListener {
                     } else {
                         Log.e("RapidSphinx", gramOrLM.getPath() + " is not a file.");
                     }
-                    rapidRecognizer = new RapidRecognizer(assetDir, config);
-                    rapidRecognizerTemp = new RapidRecognizer(assetDir, config);
+                    rapidRecognizer = new RapidRecognizer(assetDir, config, rapidSphinxListener);
+                    rapidRecognizerTemp = new RapidRecognizer(assetDir, config, rapidSphinxListener);
                     rapidRecognizer.addRapidListener(RapidSphinx.this);
                 } catch (IOException e) {
                     System.out.println(e.getMessage());

@@ -57,7 +57,12 @@ public class MainActivity extends AppCompatActivity implements RapidSphinxListen
                 // Add your config here
                 rapidSphinx.setSilentToDetect(2000);
                 rapidSphinx.setTimeOutAfterSpeech(10000);
-                config.setBoolean("-backtrace", true);
+                rapidSphinx.setRawLogAvailable(true);
+                config.setString("-logfn", "/dev/null");
+                config.setBoolean("-verbose", true);
+                config.setBoolean("-varnorm", true);
+//                config.setBoolean("-backtrace", false);
+//                config.setString("-logfn", "null");
 //                config.setFloat("-fillprob", 1.0f);
 //                config.setBoolean("-allphone_ci", true);
 //                config.setString("parameter", "value");
@@ -193,5 +198,10 @@ public class MainActivity extends AppCompatActivity implements RapidSphinxListen
     @Override
     public void rapidSphinxDidSpeechDetected() {
         txtStatus.setText("Speech detected!");
+    }
+
+    @Override
+    public  void rapidSphinxBuffer(short[] shortBuffer, byte[] byteBuffer,boolean inSpeech) {
+        System.out.println(shortBuffer.length + " - " + byteBuffer.length + " - " + inSpeech);
     }
 }

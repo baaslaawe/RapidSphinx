@@ -22,7 +22,7 @@ I have tried to speak in different word order:
 ## Gradle
 Add to build.gradle :
 ```groovy
-compile 'com.icaksama.rapidsphinx:master:2.0.9'
+compile 'com.icaksama.rapidsphinx:master:2.1.0'
 ```
 
 # How to Use
@@ -111,6 +111,11 @@ public void rapidSphinxUnsupportedWords(List<String> words) {
 @Override
 public void rapidSphinxDidSpeechDetected() {
     System.out.println("Speech detected!");
+}
+
+@Override
+public void rapidSphinxBuffer(short[] shortBuffer, byte[] byteBuffer, boolean inSpeech) {
+    // Get buffer data from your speech here
 }
 ```
 

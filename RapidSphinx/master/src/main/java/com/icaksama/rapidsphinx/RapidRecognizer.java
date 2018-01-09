@@ -37,6 +37,7 @@ public class RapidRecognizer extends SpeechRecognizer {
     private Thread recognizerThread;
     private FileOutputStream audioOutputStream = null;
     private RapidRecorder rapidRecorder = null;
+    private RapidSphinxListener rapidSphinxListener = null;
 
     /**
      * Creates speech recognizer. Recognizer holds the AudioRecord object, so you
@@ -45,9 +46,10 @@ public class RapidRecognizer extends SpeechRecognizer {
      * @param config The configuration object
      * @throws IOException thrown if audio recorder can not be created for some reason.
      */
-    protected RapidRecognizer(File assetDir, Config config) throws IOException {
+    protected RapidRecognizer(File assetDir, Config config, RapidSphinxListener rapidSphinxListener) throws IOException {
         super(config);
         this.decoder = new Decoder(config);
+        this.rapidSphinxListener = rapidSphinxListener;
         this.sampleRate = (int) decoder.getConfig().getFloat("-samprate");
         this.bufferSize = Math.round((float) this.sampleRate * 0.4F);
         this.rapidRecorder = new RapidRecorder(assetDir, sampleRate);
@@ -311,6 +313,11 @@ public class RapidRecognizer extends SpeechRecognizer {
                     final Hypothesis hypothesis = decoder.hyp();
                     mainHandler.post(new ResultEvent(hypothesis, false));
                     byte bufferData[] = short2byte(buffer);
+                    if (rapidSphinxListener != null && inSpeech) {
+                        rapidSphinxListener.rapidSphinxBuffer(buffer, bufferData, true);
+                    } else {
+                        rapidSphinxListener.rapidSphinxBuffer(buffer, bufferData, false);
+                    }
                     try {
                         if (inSpeech) {
                             audioOutputStream.write(bufferData, 0, bufferData.length);
