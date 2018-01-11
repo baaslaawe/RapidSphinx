@@ -1,4 +1,9 @@
 # RapidSphinx
+[![Creator](https://img.shields.io/badge/creator-icaksama-green.svg)](https://www.linkedin.com/in/icaksama/)
+[![Version](https://api.bintray.com/packages/icaksama/RapidSphinx/master/images/download.svg)](https://bintray.com/icaksama/RapidSphinx/master/_latestVersion)
+[![GitHub license](https://img.shields.io/github/license/icaksama/RapidSphinx.svg)](https://raw.githubusercontent.com/icaksama/RapidSphinx/master/LICENSE)
+[![Code Size](https://img.shields.io/github/languages/code-size/icaksama/RapidSphinx.svg)](https://img.shields.io/github/languages/code-size/icaksama/RapidSphinx.svg)
+<br>
 Android library for offline speech recognition base on Pocketsphinx engine. Add speech recognition feature into your Android app with easier implementations. RapidSphinx gives simple configuration and implementation for your app without dealing with Pocketsphinx assets and configuration. Just add it to your gradle!
 
 ## Features
