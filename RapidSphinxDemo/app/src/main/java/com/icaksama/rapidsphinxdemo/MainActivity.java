@@ -51,21 +51,30 @@ public class MainActivity extends AppCompatActivity implements RapidSphinxListen
 
         dialog = ProgressDialog.show(MainActivity.this, "",
                 "Preparing data. Please wait...", true);
+
+//        rapidSphinx.prepareRapidSphinxFullLM(new RapidPreparationListener() {
+//            @Override
+//            public void rapidPreExecute(Config config) {
+//                rapidSphinx.setRawLogAvailable(true);
+//                config.setString("-logfn", "/dev/null");
+//                config.setBoolean("-verbose", true);
+//            }
+//
+//            @Override
+//            public void rapidPostExecute(boolean b) {
+////                btnSync.setEnabled(true);
+////                btnRecognizer.setEnabled(false);
+//                txtStatus.setText("RapidSphinx ready!");
+//                dialog.dismiss();
+//            }
+//        });
+
         rapidSphinx.prepareRapidSphinx(new RapidPreparationListener() {
             @Override
             public void rapidPreExecute(Config config) {
-                // Add your config here
-                rapidSphinx.setSilentToDetect(2000);
-                rapidSphinx.setTimeOutAfterSpeech(10000);
                 rapidSphinx.setRawLogAvailable(true);
                 config.setString("-logfn", "/dev/null");
                 config.setBoolean("-verbose", true);
-                config.setBoolean("-varnorm", true);
-//                config.setBoolean("-backtrace", false);
-//                config.setString("-logfn", "null");
-//                config.setFloat("-fillprob", 1.0f);
-//                config.setBoolean("-allphone_ci", true);
-//                config.setString("parameter", "value");
             }
 
             @Override
@@ -88,7 +97,7 @@ public class MainActivity extends AppCompatActivity implements RapidSphinxListen
         btnStartAudio = (Button) findViewById(R.id.btnStartAudio);
         txtStatus.setText("Preparing data!");
 
-        // Disable buttons for first time
+        // Disable buttons for the first time
         btnSync.setEnabled(false);
         btnRecognizer.setEnabled(false);
 
@@ -96,7 +105,7 @@ public class MainActivity extends AppCompatActivity implements RapidSphinxListen
             @Override
             public void onClick(View view) {
                 dialog.show();
-//                btnSync.setEnabled(false);
+                btnSync.setEnabled(false);
                 btnRecognizer.setEnabled(false);
                 rapidSphinx.updateVocabulary(txtWords.getText().toString().trim(),
                         txtDistractor.getText().toString().trim().split(" "), new RapidCompletionListener() {
@@ -115,7 +124,6 @@ public class MainActivity extends AppCompatActivity implements RapidSphinxListen
                 txtStatus.setText("");
                 btnSync.setEnabled(false);
                 btnRecognizer.setEnabled(false);
-//                rapidSphinx.updateVocabulary(editText.getText().toString());
                 rapidSphinx.startRapidSphinx(10000);
                 txtStatus.setText("Speech NOW!");
             }

@@ -38,10 +38,19 @@ public class RapidRecorder {
         }
     }
 
+    /**
+     * Get audio record path
+     * @return
+     */
     public String getAudioPath() {
         return audioRecordPath;
     }
 
+    /**
+     * Play audio record
+     * @param rapidCompletionListener Give feedback if audio record already finish. Nullable
+     * @throws IOException Throw the exception when playing
+     */
     public void play(@Nullable RapidCompletionListener rapidCompletionListener) throws IOException {
         File file = new File(audioRecordPath);
         if (!file.exists())
@@ -79,10 +88,17 @@ public class RapidRecorder {
             Log.d(TAG, "audio track is not initialised ");
     }
 
+    /**
+     * Check if audio record still playing
+     * @return
+     */
     public boolean isPlaying() {
         return isPlaying;
     }
 
+    /**
+     * Stop audio record when playing.
+     */
     public void stop() {
         if (audioTrack != null) {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {

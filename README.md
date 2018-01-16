@@ -11,7 +11,6 @@ Android library for offline speech recognition base on Pocketsphinx engine. Add 
 - [x] High accuracy
 - [x] Build dictionary on the fly
 - [x] Build language model (Arpa File) on the fly
-- [x] Build JSGF Grammar on the fly
 - [x] Support PCM Recorder 16bits / mono little endian (wav file)
 - [x] Scoring system every single word (range 0.0 - 1.0)
 - [x] Detect unsupported words
@@ -28,7 +27,7 @@ I have tried to speak in different word order:
 ## Gradle
 Add to build.gradle :
 ```groovy
-compile 'com.icaksama.rapidsphinx:master:2.1.0'
+compile 'com.icaksama.rapidsphinx:master:2.1.6'
 ```
 
 # How to Use
