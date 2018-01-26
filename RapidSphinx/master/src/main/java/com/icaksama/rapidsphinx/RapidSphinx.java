@@ -476,8 +476,8 @@ public class RapidSphinx implements RecognitionListener {
             }
             @Override
             protected Exception doInBackground(Void... params) {
-                RapidSphinx.this.originalWords = Arrays.asList(words.trim().split(" "));
-                RapidSphinx.this.oovWords = Arrays.asList(oovWords);
+                RapidSphinx.this.originalWords.addAll(Arrays.asList(words.trim().split(" ")));
+                RapidSphinx.this.oovWords.addAll(Arrays.asList(oovWords));
                 RapidSphinx.this.vocabularies.addAll(RapidSphinx.this.originalWords);
                 if (oovWords != null) {
                     RapidSphinx.this.vocabularies.addAll(RapidSphinx.this.oovWords);
@@ -517,8 +517,8 @@ public class RapidSphinx implements RecognitionListener {
             }
             @Override
             protected Exception doInBackground(Void... params) {
-                RapidSphinx.this.originalWords = Arrays.asList(words);
-                RapidSphinx.this.oovWords = Arrays.asList(oovWords);
+                RapidSphinx.this.originalWords.addAll(Arrays.asList(words));
+                RapidSphinx.this.oovWords.addAll(Arrays.asList(oovWords));
                 RapidSphinx.this.vocabularies.addAll(RapidSphinx.this.originalWords);
                 if (oovWords != null) {
                     RapidSphinx.this.vocabularies.addAll(RapidSphinx.this.oovWords);
@@ -558,8 +558,8 @@ public class RapidSphinx implements RecognitionListener {
             }
             @Override
             protected Exception doInBackground(Void... params) {
-                RapidSphinx.this.originalWords = Arrays.asList(grammarStr.trim().split(" "));
-                RapidSphinx.this.oovWords = Arrays.asList(oogWords);
+                RapidSphinx.this.originalWords.addAll(Arrays.asList(grammarStr.trim().split(" ")));
+                RapidSphinx.this.oovWords.addAll(Arrays.asList(oogWords));
                 RapidSphinx.this.vocabularies.addAll(RapidSphinx.this.originalWords);
                 if (oogWords != null) {
                     RapidSphinx.this.vocabularies.addAll(RapidSphinx.this.oovWords);

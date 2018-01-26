@@ -27,7 +27,7 @@ I have tried to speak in different word order:
 ## Gradle
 Add to build.gradle :
 ```groovy
-compile 'com.icaksama.rapidsphinx:master:2.1.6'
+compile 'com.icaksama.rapidsphinx:master:2.1.7'
 ```
 
 # How to Use

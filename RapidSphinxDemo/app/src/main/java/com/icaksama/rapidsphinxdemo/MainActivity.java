@@ -5,6 +5,7 @@ import android.app.ProgressDialog;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
@@ -47,10 +48,26 @@ public class MainActivity extends AppCompatActivity implements RapidSphinxListen
         setContentView(R.layout.activity_main);
         rapidSphinx = new RapidSphinx(this);
         rapidSphinx.addListener(this);
-        this.requestPermissions();
+        if (isPermissionsGranted()) {
+            dialog = ProgressDialog.show(MainActivity.this, "",
+                    "Preparing data. Please wait...", true);
+            rapidSphinx.prepareRapidSphinx(new RapidPreparationListener() {
+                @Override
+                public void rapidPreExecute(Config config) {
+                    rapidSphinx.setRawLogAvailable(true);
+                    config.setString("-logfn", "/dev/null");
+                    config.setBoolean("-verbose", true);
+                }
 
-        dialog = ProgressDialog.show(MainActivity.this, "",
-                "Preparing data. Please wait...", true);
+                @Override
+                public void rapidPostExecute(boolean isSuccess) {
+                    btnSync.setEnabled(true);
+                    btnRecognizer.setEnabled(false);
+                    txtStatus.setText("RapidSphinx ready!");
+                    dialog.dismiss();
+                }
+            });
+        }
 
 //        rapidSphinx.prepareRapidSphinxFullLM(new RapidPreparationListener() {
 //            @Override
@@ -68,23 +85,6 @@ public class MainActivity extends AppCompatActivity implements RapidSphinxListen
 //                dialog.dismiss();
 //            }
 //        });
-
-        rapidSphinx.prepareRapidSphinx(new RapidPreparationListener() {
-            @Override
-            public void rapidPreExecute(Config config) {
-                rapidSphinx.setRawLogAvailable(true);
-                config.setString("-logfn", "/dev/null");
-                config.setBoolean("-verbose", true);
-            }
-
-            @Override
-            public void rapidPostExecute(boolean isSuccess) {
-                btnSync.setEnabled(true);
-                btnRecognizer.setEnabled(false);
-                txtStatus.setText("RapidSphinx ready!");
-                dialog.dismiss();
-            }
-        });
 
         txtWords = (EditText) findViewById(R.id.txtWords);
         txtDistractor = (EditText) findViewById(R.id.txtDistractor);
@@ -111,6 +111,10 @@ public class MainActivity extends AppCompatActivity implements RapidSphinxListen
                         txtDistractor.getText().toString().trim().split(" "), new RapidCompletionListener() {
                     @Override
                     public void rapidCompletedProcess() {
+                        txtResult.setText("");
+                        txtPartialResult.setText("");
+                        txtStatus.setText("");
+                        txtUnsupported.setText("");
                         btnRecognizer.setEnabled(true);
                         dialog.dismiss();
                     }
@@ -121,7 +125,10 @@ public class MainActivity extends AppCompatActivity implements RapidSphinxListen
         btnRecognizer.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                txtResult.setText("");
+                txtPartialResult.setText("");
                 txtStatus.setText("");
+                txtUnsupported.setText("");
                 btnSync.setEnabled(false);
                 btnRecognizer.setEnabled(false);
                 rapidSphinx.startRapidSphinx(10000);
@@ -148,13 +155,39 @@ public class MainActivity extends AppCompatActivity implements RapidSphinxListen
         });
     }
 
-    private void requestPermissions() {
+    private boolean isPermissionsGranted() {
         if (ContextCompat.checkSelfPermission(this,
                 Manifest.permission.RECORD_AUDIO) != PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(this,
                     new String[]{Manifest.permission.RECORD_AUDIO},
                     1);
+            return false;
+        } else {
+            return true;
         }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        dialog = ProgressDialog.show(MainActivity.this, "",
+                "Preparing data. Please wait...", true);
+        rapidSphinx.prepareRapidSphinx(new RapidPreparationListener() {
+            @Override
+            public void rapidPreExecute(Config config) {
+                rapidSphinx.setRawLogAvailable(true);
+                config.setString("-logfn", "/dev/null");
+                config.setBoolean("-verbose", true);
+            }
+
+            @Override
+            public void rapidPostExecute(boolean isSuccess) {
+                btnSync.setEnabled(true);
+                btnRecognizer.setEnabled(false);
+                txtStatus.setText("RapidSphinx ready!");
+                dialog.dismiss();
+            }
+        });
     }
 
     @Override
