@@ -27,7 +27,7 @@ I have tried to speak in different word order:
 ## Gradle
 Add to build.gradle :
 ```groovy
-compile 'com.icaksama.rapidsphinx:master:2.1.7'
+compile 'com.icaksama.rapidsphinx:master:2.1.8'
 ```
 
 # How to Use
@@ -131,8 +131,9 @@ rapidSphinx.prepareRapidSphinx(new RapidPreparationListener() {
     @Override
     public void rapidPreExecute(Config config) {
         // Add your config here:
-        rapidSphinx.setSilentToDetect(2000);
-        config.setString("-parameter", "value");
+        rapidSphinx.setSilentToDetect(1);
+        rapidSphinx.setStopAtEndOfSpeech(false);
+        // config.setString("-parameter", "value");
     }
 
     @Override
@@ -176,10 +177,21 @@ rapidSphinx.updateGrammar("YOUR VOCABULARIES!",
 });
 ```
 
-## Start The Speech Recognition
+## Start Speech Recognition
+There are 2 ways to start speech recognition:
 ```java
-// Set the Timeout in miliseconds
+// Start speech recognition with timeout in miliseconds
 rapidSphinx.startRapidSphinx(10000);
+
+// Start speech recognition without timeout
+rapidSphinx.startRapidSphinx();
+```
+
+## Stop Speech Recognition
+You can stop speech recognition manually.
+```java
+// Stop speech recognition manually
+rapidSphinx.stopRapidSphinx();
 ```
 
 ## Play Audio Record
@@ -193,7 +205,11 @@ rapidSphinx.getRapidRecorder().play(new RapidCompletionListener() {
 });
 ```
 
-### Note : Please take a look at RapidSphinxDemo for detail usage.
+<p align="center">
+<a href="https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=CXJ3AHUB3KDQ4" alt="Donate">
+<img src="https://www.paypalobjects.com/en_US/i/btn/btn_donateCC_LG.gif" />
+</a>
+</p>
 
 ## MIT License
 ```
