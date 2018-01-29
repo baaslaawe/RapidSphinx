@@ -151,7 +151,7 @@ Make sure to remove the punctuation before update vocabulary/grammar.
 ```java
 // Update vocabulary with language model from single string
 rapidSphinx.updateVocabulary("YOUR VOCABULARIES!",
-                                new String[]{"KEYWORD SPOTTING FOR OOV!", ...}, new RapidCompletionListener() {
+                                new String[]{"WORDS DISTURBER!", ...}, new RapidCompletionListener() {
     @Override
     public void rapidCompletedProcess() {
         System.out.println("Vocabulary updated!");
@@ -159,8 +159,8 @@ rapidSphinx.updateVocabulary("YOUR VOCABULARIES!",
 });
 
 // Update vocabulary with language model from array string
-rapidSphinx.updateVocabulary(new String[]{"TEXT1!", "TEXT2!", ...},
-                                new String[]{"KEYWORD SPOTTING FOR OOV!", ...}, new RapidCompletionListener() {
+rapidSphinx.updateVocabulary(new String[]{"VOCABULARY1!", "VOCABULARY2!", ...},
+                                new String[]{"WORDS DISTURBER!", ...}, new RapidCompletionListener() {
     @Override
     public void rapidCompletedProcess() {
         System.out.println("Vocabulary updated!");
@@ -168,8 +168,8 @@ rapidSphinx.updateVocabulary(new String[]{"TEXT1!", "TEXT2!", ...},
 });
 
 // Update vocabulary with JSGF Grammar from string
-rapidSphinx.updateGrammar("YOUR VOCABULARIES!",
-                                new String[]{"KEYWORD SPOTTING FOR OOV!", ...}, new RapidCompletionListener() {
+rapidSphinx.updateGrammar("YOUR GRAMMAR STRING!",
+                                new String[]{"WORDS DISTURBER!", ...}, new RapidCompletionListener() {
     @Override
     public void rapidCompletedProcess() {
         System.out.println("Grammar updated!");
@@ -180,8 +180,8 @@ rapidSphinx.updateGrammar("YOUR VOCABULARIES!",
 ## Start Speech Recognition
 There are 2 ways to start speech recognition:
 ```java
-// Start speech recognition with timeout in miliseconds
-rapidSphinx.startRapidSphinx(10000);
+// Start speech recognition with timeout in seconds
+rapidSphinx.startRapidSphinx(10);
 
 // Start speech recognition without timeout
 rapidSphinx.startRapidSphinx();
