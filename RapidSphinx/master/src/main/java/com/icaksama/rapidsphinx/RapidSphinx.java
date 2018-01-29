@@ -40,7 +40,6 @@ public class RapidSphinx implements RecognitionListener {
     private RapidRecognizer rapidRecognizer;
     private RapidRecognizer rapidRecognizerTemp;
     private Context context;
-//    private String[] words = null;
     private Utilities util = new Utilities();
     private RapidSphinxListener rapidSphinxListener = null;
     private File assetDir = null;
@@ -48,7 +47,9 @@ public class RapidSphinx implements RecognitionListener {
     // Additional Setting
     private boolean rawLogAvailable = false;
     private long sampleRate = 16000;
-    private float vadThreshold = (float) 3.0;
+    private float vadThreshold = (float) 3.5;
+    private float silentToDetect = 1.0f;
+    private boolean stopAtEndOfSpeech = false;
 
     private List<String> originalWords = new ArrayList<String>();
     private List<String> oovWords = new ArrayList<String>();
@@ -287,6 +288,7 @@ public class RapidSphinx implements RecognitionListener {
                     }
                     rapidRecognizer = new RapidRecognizer(assetDir, config, rapidSphinxListener);
                     rapidRecognizerTemp = new RapidRecognizer(assetDir, config, rapidSphinxListener);
+                    rapidRecognizer.setSilentToDetect(getSilentToDetect());
                     rapidRecognizer.addRapidListener(RapidSphinx.this);
                 } catch (IOException e) {
                     System.out.println(e.getMessage());
@@ -367,6 +369,7 @@ public class RapidSphinx implements RecognitionListener {
                     }
                     rapidRecognizer = new RapidRecognizer(assetDir, config, rapidSphinxListener);
                     rapidRecognizerTemp = new RapidRecognizer(assetDir, config, rapidSphinxListener);
+                    rapidRecognizer.setSilentToDetect(getSilentToDetect());
                     rapidRecognizer.addRapidListener(RapidSphinx.this);
                 } catch (IOException e) {
                     System.out.println(e.getMessage());
@@ -424,6 +427,7 @@ public class RapidSphinx implements RecognitionListener {
                     rapidRecognizer = new RapidRecognizer(assetDir, config, rapidSphinxListener);
                     rapidRecognizerTemp = new RapidRecognizer(assetDir, config, rapidSphinxListener);
                     rapidRecognizer.getRapidDecoder().setLmFile(SEARCH_ID, new File(assetDir, "en-us.lm.bin").getPath());
+                    rapidRecognizer.setSilentToDetect(getSilentToDetect());
                     rapidRecognizer.addRapidListener(RapidSphinx.this);
                 } catch (IOException e) {
                     System.out.println(e.getMessage());
@@ -444,17 +448,31 @@ public class RapidSphinx implements RecognitionListener {
     }
 
     /**
-     * Start the recognizer with timout in miliseconds
-     * @param timeOut Time in miliseconds
+     * Start the recognizer with timout in seconds
+     * @param timeout Time in seconds
      */
-    public void startRapidSphinx(int timeOut) {
+    public void startRapidSphinx(float timeout) {
         if (ContextCompat.checkSelfPermission(this.context,
                 Manifest.permission.RECORD_AUDIO) != PackageManager.PERMISSION_GRANTED) {
             System.out.println("Perrmission record not granted!");
         } else {
             scores.clear();
             hypArr.clear();
-            rapidRecognizer.startRapidListening(SEARCH_ID, timeOut);
+            rapidRecognizer.startRapidListening(SEARCH_ID, (int) (timeout * 1000));
+        }
+    }
+
+    /**
+     * Start RapidSphinx without timeout.
+     */
+    public void startRapidSphinx() {
+        if (ContextCompat.checkSelfPermission(this.context,
+                Manifest.permission.RECORD_AUDIO) != PackageManager.PERMISSION_GRANTED) {
+            System.out.println("Perrmission record not granted!");
+        } else {
+            scores.clear();
+            hypArr.clear();
+            rapidRecognizer.startRapidListening(SEARCH_ID);
         }
     }
 
@@ -497,6 +515,38 @@ public class RapidSphinx implements RecognitionListener {
                 }
             }
         }.execute();
+    }
+
+    /**
+     * Get seconds of silent to detect
+     * @return
+     */
+    public float getSilentToDetect() {
+        return silentToDetect;
+    }
+
+    /**
+     * Set silent to detect, silent will considered after this seconds.
+     * @param silentToDetect value in seconds. Default is 1s.
+     */
+    public void setSilentToDetect(float silentToDetect) {
+        this.silentToDetect = silentToDetect;
+    }
+
+    /**
+     * Get condition of stop at end of speech.
+     * @return
+     */
+    public boolean isStopAtEndOfSpeech() {
+        return stopAtEndOfSpeech;
+    }
+
+    /**
+     * Set confition to stop recognition after silent detected.
+     * @param stopAtEndOfSpeech boolean condition. Default is false.
+     */
+    public void setStopAtEndOfSpeech(boolean stopAtEndOfSpeech) {
+        this.stopAtEndOfSpeech = stopAtEndOfSpeech;
     }
 
     /**
@@ -751,7 +801,7 @@ public class RapidSphinx implements RecognitionListener {
     /**
      * Stop the recognizer and release the release the recorder.
      */
-    public void stop() {
+    public void stopRapidSphinx() {
         rapidRecognizer.stopRapid();
         rapidRecognizer.shutdownRapid();
     }
@@ -773,7 +823,9 @@ public class RapidSphinx implements RecognitionListener {
 
     @Override
     public void onEndOfSpeech() {
-        stop();
+        if (isStopAtEndOfSpeech()) {
+            stopRapidSphinx();
+        }
         if (rapidSphinxListener != null) {
             rapidSphinxListener.rapidSphinxDidStop("End of Speech!", 200);
         }
@@ -815,7 +867,7 @@ public class RapidSphinx implements RecognitionListener {
 
     @Override
     public void onError(Exception e) {
-        stop();
+        stopRapidSphinx();
         if (rapidSphinxListener != null) {
             rapidSphinxListener.rapidSphinxDidStop(e.getMessage(), 500);
         }
@@ -823,7 +875,7 @@ public class RapidSphinx implements RecognitionListener {
 
     @Override
     public void onTimeout() {
-        stop();
+        stopRapidSphinx();
         if (rapidSphinxListener != null) {
             rapidSphinxListener.rapidSphinxDidStop("Speech timed out!", 522);
         }

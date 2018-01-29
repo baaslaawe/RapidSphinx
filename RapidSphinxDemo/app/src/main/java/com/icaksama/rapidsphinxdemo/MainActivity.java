@@ -54,9 +54,11 @@ public class MainActivity extends AppCompatActivity implements RapidSphinxListen
             rapidSphinx.prepareRapidSphinx(new RapidPreparationListener() {
                 @Override
                 public void rapidPreExecute(Config config) {
-                    rapidSphinx.setRawLogAvailable(true);
-                    config.setString("-logfn", "/dev/null");
-                    config.setBoolean("-verbose", true);
+//                    rapidSphinx.setRawLogAvailable(true);
+//                    config.setString("-logfn", "/dev/null");
+//                    config.setBoolean("-verbose", true);
+                    rapidSphinx.setStopAtEndOfSpeech(true);
+                    rapidSphinx.setSilentToDetect(2.0f);
                 }
 
                 @Override
@@ -131,7 +133,7 @@ public class MainActivity extends AppCompatActivity implements RapidSphinxListen
                 txtUnsupported.setText("");
                 btnSync.setEnabled(false);
                 btnRecognizer.setEnabled(false);
-                rapidSphinx.startRapidSphinx(10000);
+                rapidSphinx.startRapidSphinx(10);
                 txtStatus.setText("Speech NOW!");
             }
         });

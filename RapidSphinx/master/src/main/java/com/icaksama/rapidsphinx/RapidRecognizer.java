@@ -38,6 +38,10 @@ public class RapidRecognizer extends SpeechRecognizer {
     private FileOutputStream audioOutputStream = null;
     private RapidRecorder rapidRecorder = null;
     private RapidSphinxListener rapidSphinxListener = null;
+    private float silentToDetect = 1.0f;
+    private boolean isAlreadySpeech = false;
+    private Handler endSpeechDelayed = new Handler(Looper.getMainLooper());
+    private Runnable runnableEndOfSpeech = null;
 
     /**
      * Creates speech recognizer. Recognizer holds the AudioRecord object, so you
@@ -53,6 +57,22 @@ public class RapidRecognizer extends SpeechRecognizer {
         this.sampleRate = (int) decoder.getConfig().getFloat("-samprate");
         this.bufferSize = Math.round((float) this.sampleRate * 0.4F);
         this.rapidRecorder = new RapidRecorder(assetDir, sampleRate);
+    }
+
+    /**
+     * Get seconds of silent to detect
+     * @return
+     */
+    protected float getSilentToDetect() {
+        return silentToDetect;
+    }
+
+    /**
+     * Set seconds of silent to detect.
+     * @param silentToDetect value in seconds. Default is 1s.
+     */
+    protected void setSilentToDetect(float silentToDetect) {
+        this.silentToDetect = silentToDetect;
     }
 
     /**
@@ -83,6 +103,7 @@ public class RapidRecognizer extends SpeechRecognizer {
             return false;
 
         Log.i(TAG, format("Start recognition \"%s\"", searchName));
+        this.isAlreadySpeech = false;
         this.setFileOutputStream();
         decoder.setSearch(searchName);
         recognizerThread = new RecognizerThread();
@@ -102,6 +123,7 @@ public class RapidRecognizer extends SpeechRecognizer {
             return false;
 
         Log.i(TAG, format("Start recognition \"%s\"", searchName));
+        this.isAlreadySpeech = false;
         this.setFileOutputStream();
         decoder.setSearch(searchName);
         recognizerThread = new RecognizerThread(timeout);
@@ -368,11 +390,28 @@ public class RapidRecognizer extends SpeechRecognizer {
         }
 
         @Override
-        protected void execute(RecognitionListener listener) {
-            if (state)
-                listener.onBeginningOfSpeech();
-            else
-                listener.onEndOfSpeech();
+        protected void execute(final RecognitionListener listener) {
+            if (state) {
+                if (!isAlreadySpeech) {
+                    if (runnableEndOfSpeech != null) {
+                        endSpeechDelayed.removeCallbacks(runnableEndOfSpeech);
+                        runnableEndOfSpeech = null;
+                    }
+                    isAlreadySpeech = true;
+                    listener.onBeginningOfSpeech();
+                }
+            } else {
+                if (isAlreadySpeech && runnableEndOfSpeech == null) {
+                    runnableEndOfSpeech = new Runnable() {
+                        @Override
+                        public void run() {
+                            listener.onEndOfSpeech();
+                        }
+                    };
+                    isAlreadySpeech = false;
+                    endSpeechDelayed.postDelayed(runnableEndOfSpeech, (long) (silentToDetect * 1000));
+                }
+            }
         }
     }
 

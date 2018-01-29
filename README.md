@@ -27,7 +27,7 @@ I have tried to speak in different word order:
 ## Gradle
 Add to build.gradle :
 ```groovy
-compile 'com.icaksama.rapidsphinx:master:2.1.7'
+compile 'com.icaksama.rapidsphinx:master:2.2.0'
 ```
 
 # How to Use
@@ -132,7 +132,7 @@ rapidSphinx.prepareRapidSphinx(new RapidPreparationListener() {
     public void rapidPreExecute(Config config) {
         // Add your config here:
         rapidSphinx.setSilentToDetect(1);
-        rapidSphinx.setStopAtEndOfSpeech(false);
+        rapidSphinx.setStopAtEndOfSpeech(true);
         // config.setString("-parameter", "value");
     }
 
