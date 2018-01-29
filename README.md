@@ -27,7 +27,7 @@ I have tried to speak in different word order:
 ## Gradle
 Add to build.gradle :
 ```groovy
-compile 'com.icaksama.rapidsphinx:master:2.1.8'
+compile 'com.icaksama.rapidsphinx:master:2.1.7'
 ```
 
 # How to Use
@@ -85,7 +85,7 @@ public void rapidSphinxDidStop(String reason, int code) {
 public void rapidSphinxFinalResult(String result, List<String> hypArr, List<Double> scores) {
     System.out.println("Full Result : " + result);
     // NOTE :
-    // [x] parameter "result" : Give final response with ??? values when word out-of-vocabulary.
+    // [x] parameter "result" : Give final response with ??? values when word detected as word disturber.
     // [x] parameter "hypArr" : Give final response in original words without ??? values.
     
     // Get score from every single word. hypArr length equal with scores length
